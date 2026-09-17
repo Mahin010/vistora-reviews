@@ -221,11 +221,13 @@ export function FeaturedImageField({
   onChange,
   altText,
   onAltTextChange,
+  folder = "featured",
 }: {
   value: string | null;
   onChange: (url: string | null) => void;
   altText?: string;
   onAltTextChange?: (value: string) => void;
+  folder?: MediaFolder;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -283,7 +285,7 @@ export function FeaturedImageField({
       <MediaPickerDialog
         open={open}
         onOpenChange={setOpen}
-        folder="featured"
+        folder={folder}
         onSelect={(item) => {
           onChange(item.url);
           if (onAltTextChange && item.alt_text) onAltTextChange(item.alt_text);

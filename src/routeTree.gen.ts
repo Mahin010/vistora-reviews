@@ -28,11 +28,15 @@ import { Route as WordpressRouteImport } from './routes/wordpress'
 import { Route as ReviewsIndexRouteImport } from './routes/reviews.index'
 import { Route as ReviewsSlugRouteImport } from './routes/reviews.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminAppearanceRouteImport } from './routes/_authenticated/admin.appearance'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminCommentsRouteImport } from './routes/_authenticated/admin.comments'
 import { Route as AuthenticatedAdminMediaRouteImport } from './routes/_authenticated/admin.media'
+import { Route as AuthenticatedAdminProfileRouteImport } from './routes/_authenticated/admin.profile'
 import { Route as AuthenticatedAdminSettingsRouteImport } from './routes/_authenticated/admin.settings'
 import { Route as AuthenticatedAdminTagsRouteImport } from './routes/_authenticated/admin.tags'
+import { Route as AuthenticatedAdminToolsRouteImport } from './routes/_authenticated/admin.tools'
+import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 import { Route as AuthenticatedAdminPostsIndexRouteImport } from './routes/_authenticated/admin.posts.index'
 import { Route as AuthenticatedAdminPostsIdRouteImport } from './routes/_authenticated/admin.posts.$id'
 
@@ -130,6 +134,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminAppearanceRoute =
+  AuthenticatedAdminAppearanceRouteImport.update({
+    id: '/admin/appearance',
+    path: '/admin/appearance',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminCategoriesRoute =
   AuthenticatedAdminCategoriesRouteImport.update({
     id: '/admin/categories',
@@ -147,6 +157,12 @@ const AuthenticatedAdminMediaRoute = AuthenticatedAdminMediaRouteImport.update({
   path: '/admin/media',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminProfileRoute =
+  AuthenticatedAdminProfileRouteImport.update({
+    id: '/admin/profile',
+    path: '/admin/profile',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminSettingsRoute =
   AuthenticatedAdminSettingsRouteImport.update({
     id: '/admin/settings',
@@ -156,6 +172,16 @@ const AuthenticatedAdminSettingsRoute =
 const AuthenticatedAdminTagsRoute = AuthenticatedAdminTagsRouteImport.update({
   id: '/admin/tags',
   path: '/admin/tags',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminToolsRoute = AuthenticatedAdminToolsRouteImport.update({
+  id: '/admin/tools',
+  path: '/admin/tools',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAdminPostsIndexRoute =
@@ -189,11 +215,15 @@ export interface FileRoutesByFullPath {
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews/': typeof ReviewsIndexRoute
+  '/admin/appearance': typeof AuthenticatedAdminAppearanceRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/comments': typeof AuthenticatedAdminCommentsRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/admin/profile': typeof AuthenticatedAdminProfileRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/tags': typeof AuthenticatedAdminTagsRoute
+  '/admin/tools': typeof AuthenticatedAdminToolsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
   '/admin/posts/': typeof AuthenticatedAdminPostsIndexRoute
@@ -216,11 +246,15 @@ export interface FileRoutesByTo {
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews': typeof ReviewsIndexRoute
+  '/admin/appearance': typeof AuthenticatedAdminAppearanceRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/comments': typeof AuthenticatedAdminCommentsRoute
   '/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/admin/profile': typeof AuthenticatedAdminProfileRoute
   '/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/admin/tags': typeof AuthenticatedAdminTagsRoute
+  '/admin/tools': typeof AuthenticatedAdminToolsRoute
+  '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
   '/admin/posts': typeof AuthenticatedAdminPostsIndexRoute
@@ -245,11 +279,15 @@ export interface FileRoutesById {
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews/': typeof ReviewsIndexRoute
+  '/_authenticated/admin/appearance': typeof AuthenticatedAdminAppearanceRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/comments': typeof AuthenticatedAdminCommentsRoute
   '/_authenticated/admin/media': typeof AuthenticatedAdminMediaRoute
+  '/_authenticated/admin/profile': typeof AuthenticatedAdminProfileRoute
   '/_authenticated/admin/settings': typeof AuthenticatedAdminSettingsRoute
   '/_authenticated/admin/tags': typeof AuthenticatedAdminTagsRoute
+  '/_authenticated/admin/tools': typeof AuthenticatedAdminToolsRoute
+  '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
   '/_authenticated/admin/posts/': typeof AuthenticatedAdminPostsIndexRoute
@@ -274,11 +312,15 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews/'
+    | '/admin/appearance'
     | '/admin/categories'
     | '/admin/comments'
     | '/admin/media'
+    | '/admin/profile'
     | '/admin/settings'
     | '/admin/tags'
+    | '/admin/tools'
+    | '/admin/users'
     | '/admin/'
     | '/admin/posts/$id'
     | '/admin/posts/'
@@ -301,11 +343,15 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews'
+    | '/admin/appearance'
     | '/admin/categories'
     | '/admin/comments'
     | '/admin/media'
+    | '/admin/profile'
     | '/admin/settings'
     | '/admin/tags'
+    | '/admin/tools'
+    | '/admin/users'
     | '/admin'
     | '/admin/posts/$id'
     | '/admin/posts'
@@ -329,11 +375,15 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews/'
+    | '/_authenticated/admin/appearance'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/comments'
     | '/_authenticated/admin/media'
+    | '/_authenticated/admin/profile'
     | '/_authenticated/admin/settings'
     | '/_authenticated/admin/tags'
+    | '/_authenticated/admin/tools'
+    | '/_authenticated/admin/users'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/posts/$id'
     | '/_authenticated/admin/posts/'
@@ -495,6 +545,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/appearance': {
+      id: '/_authenticated/admin/appearance'
+      path: '/admin/appearance'
+      fullPath: '/admin/appearance'
+      preLoaderRoute: typeof AuthenticatedAdminAppearanceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/categories': {
       id: '/_authenticated/admin/categories'
       path: '/admin/categories'
@@ -516,6 +573,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMediaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/profile': {
+      id: '/_authenticated/admin/profile'
+      path: '/admin/profile'
+      fullPath: '/admin/profile'
+      preLoaderRoute: typeof AuthenticatedAdminProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/settings': {
       id: '/_authenticated/admin/settings'
       path: '/admin/settings'
@@ -528,6 +592,20 @@ declare module '@tanstack/react-router' {
       path: '/admin/tags'
       fullPath: '/admin/tags'
       preLoaderRoute: typeof AuthenticatedAdminTagsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/tools': {
+      id: '/_authenticated/admin/tools'
+      path: '/admin/tools'
+      fullPath: '/admin/tools'
+      preLoaderRoute: typeof AuthenticatedAdminToolsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/users': {
+      id: '/_authenticated/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthenticatedAdminUsersRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin/posts/': {
@@ -548,22 +626,30 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminAppearanceRoute: typeof AuthenticatedAdminAppearanceRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminCommentsRoute: typeof AuthenticatedAdminCommentsRoute
   AuthenticatedAdminMediaRoute: typeof AuthenticatedAdminMediaRoute
+  AuthenticatedAdminProfileRoute: typeof AuthenticatedAdminProfileRoute
   AuthenticatedAdminSettingsRoute: typeof AuthenticatedAdminSettingsRoute
   AuthenticatedAdminTagsRoute: typeof AuthenticatedAdminTagsRoute
+  AuthenticatedAdminToolsRoute: typeof AuthenticatedAdminToolsRoute
+  AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminPostsIdRoute: typeof AuthenticatedAdminPostsIdRoute
   AuthenticatedAdminPostsIndexRoute: typeof AuthenticatedAdminPostsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminAppearanceRoute: AuthenticatedAdminAppearanceRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminCommentsRoute: AuthenticatedAdminCommentsRoute,
   AuthenticatedAdminMediaRoute: AuthenticatedAdminMediaRoute,
+  AuthenticatedAdminProfileRoute: AuthenticatedAdminProfileRoute,
   AuthenticatedAdminSettingsRoute: AuthenticatedAdminSettingsRoute,
   AuthenticatedAdminTagsRoute: AuthenticatedAdminTagsRoute,
+  AuthenticatedAdminToolsRoute: AuthenticatedAdminToolsRoute,
+  AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminPostsIdRoute: AuthenticatedAdminPostsIdRoute,
   AuthenticatedAdminPostsIndexRoute: AuthenticatedAdminPostsIndexRoute,
