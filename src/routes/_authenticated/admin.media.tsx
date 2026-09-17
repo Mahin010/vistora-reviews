@@ -92,7 +92,12 @@ function MediaPage() {
         )}
       </div>
 
-      <MediaDetailsDialog item={active} onClose={() => setActive(null)} />
+      <MediaDetailsDialog
+        item={active}
+        onOpenChange={(open) => {
+          if (!open) setActive(null);
+        }}
+      />
     </AdminShell>
   );
 }

@@ -112,7 +112,9 @@ function PostsList() {
         query = query.eq("status", search.status);
       }
       if (search.category) query = query.eq("category_id", search.category);
-      if (search.type) query = query.eq("post_type", search.type as Row["post_type"]);
+      if (search.type) {
+        query = query.eq("post_type", search.type as "review" | "comparison" | "guide" | "article");
+      }
       if (search.q) query = query.or(`title.ilike.%${search.q}%,product_name.ilike.%${search.q}%`);
 
       const from = (search.page - 1) * PER_PAGE;
@@ -177,9 +179,13 @@ function PostsList() {
 
   const setStatus = useMutation({
     mutationFn: async ({ ids, status }: { ids: string[]; status: Row["status"] }) => {
-      const patch: Record<string, unknown> = { status };
-      if (status === "published") patch.published_at = new Date().toISOString();
-      const { error } = await supabase.from("posts").update(patch).in("id", ids);
+      const { error } = await supabase
+        .from("posts")
+        .update({
+          status,
+          ...(status === "published" ? { published_at: new Date().toISOString() } : {}),
+        })
+        .in("id", ids);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -194,24 +200,23 @@ function PostsList() {
     mutationFn: async (id: string) => {
       const { data: original, error } = await supabase.from("posts").select("*").eq("id", id).single();
       if (error) throw error;
-      const copy = { ...(original as Record<string, unknown>) };
-      delete copy.id;
-      delete copy.created_at;
-      delete copy.updated_at;
-      copy.title = `${original.title} (copy)`;
-      copy.slug = `${original.slug}-copy-${Date.now().toString(36)}`;
-      copy.status = "draft";
-      copy.published_at = null;
-      copy.trashed_at = null;
-      copy.view_count = 0;
-      copy.is_featured = false;
-      if (!staff?.canManageAll) {
-        copy.author_id = staff?.id ?? null;
-        copy.author_name = staff?.fullName ?? "Vistora Editorial";
-      }
+      const { id: _id, created_at: _created, updated_at: _updated, ...rest } = original;
+      const copy = {
+        ...rest,
+        title: `${original.title} (copy)`,
+        slug: `${original.slug}-copy-${Date.now().toString(36)}`,
+        status: "draft" as const,
+        published_at: null,
+        trashed_at: null,
+        view_count: 0,
+        is_featured: false,
+        ...(staff?.canManageAll
+          ? {}
+          : { author_id: staff?.id ?? null, author_name: staff?.fullName ?? "Vistora Editorial" }),
+      };
       const { data: created, error: insertError } = await supabase
         .from("posts")
-        .insert(copy as never)
+        .insert(copy)
         .select("id")
         .single();
       if (insertError) throw insertError;
