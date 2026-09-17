@@ -15,9 +15,11 @@ import { Route as ComparisonsRouteImport } from './routes/comparisons'
 import { Route as HowToGuidesRouteImport } from './routes/how-to-guides'
 import { Route as MarketingToolsRouteImport } from './routes/marketing-tools'
 import { Route as ProductivityRouteImport } from './routes/productivity'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as SoftwareRouteImport } from './routes/software'
 import { Route as WordpressRouteImport } from './routes/wordpress'
 import { Route as ReviewsIndexRouteImport } from './routes/reviews.index'
+import { Route as ReviewsSlugRouteImport } from './routes/reviews.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -49,6 +51,11 @@ const ProductivityRoute = ProductivityRouteImport.update({
   path: '/productivity',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SoftwareRoute = SoftwareRouteImport.update({
   id: '/software',
   path: '/software',
@@ -64,6 +71,11 @@ const ReviewsIndexRoute = ReviewsIndexRouteImport.update({
   path: '/reviews/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReviewsSlugRoute = ReviewsSlugRouteImport.update({
+  id: '/reviews/$slug',
+  path: '/reviews/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -72,8 +84,10 @@ export interface FileRoutesByFullPath {
   '/how-to-guides': typeof HowToGuidesRoute
   '/marketing-tools': typeof MarketingToolsRoute
   '/productivity': typeof ProductivityRoute
+  '/search': typeof SearchRoute
   '/software': typeof SoftwareRoute
   '/wordpress': typeof WordpressRoute
+  '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews/': typeof ReviewsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -83,8 +97,10 @@ export interface FileRoutesByTo {
   '/how-to-guides': typeof HowToGuidesRoute
   '/marketing-tools': typeof MarketingToolsRoute
   '/productivity': typeof ProductivityRoute
+  '/search': typeof SearchRoute
   '/software': typeof SoftwareRoute
   '/wordpress': typeof WordpressRoute
+  '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews': typeof ReviewsIndexRoute
 }
 export interface FileRoutesById {
@@ -95,8 +111,10 @@ export interface FileRoutesById {
   '/how-to-guides': typeof HowToGuidesRoute
   '/marketing-tools': typeof MarketingToolsRoute
   '/productivity': typeof ProductivityRoute
+  '/search': typeof SearchRoute
   '/software': typeof SoftwareRoute
   '/wordpress': typeof WordpressRoute
+  '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews/': typeof ReviewsIndexRoute
 }
 export interface FileRouteTypes {
@@ -108,8 +126,10 @@ export interface FileRouteTypes {
     | '/how-to-guides'
     | '/marketing-tools'
     | '/productivity'
+    | '/search'
     | '/software'
     | '/wordpress'
+    | '/reviews/$slug'
     | '/reviews/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -119,8 +139,10 @@ export interface FileRouteTypes {
     | '/how-to-guides'
     | '/marketing-tools'
     | '/productivity'
+    | '/search'
     | '/software'
     | '/wordpress'
+    | '/reviews/$slug'
     | '/reviews'
   id:
     | '__root__'
@@ -130,8 +152,10 @@ export interface FileRouteTypes {
     | '/how-to-guides'
     | '/marketing-tools'
     | '/productivity'
+    | '/search'
     | '/software'
     | '/wordpress'
+    | '/reviews/$slug'
     | '/reviews/'
   fileRoutesById: FileRoutesById
 }
@@ -142,8 +166,10 @@ export interface RootRouteChildren {
   HowToGuidesRoute: typeof HowToGuidesRoute
   MarketingToolsRoute: typeof MarketingToolsRoute
   ProductivityRoute: typeof ProductivityRoute
+  SearchRoute: typeof SearchRoute
   SoftwareRoute: typeof SoftwareRoute
   WordpressRoute: typeof WordpressRoute
+  ReviewsSlugRoute: typeof ReviewsSlugRoute
   ReviewsIndexRoute: typeof ReviewsIndexRoute
 }
 
@@ -191,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductivityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/software': {
       id: '/software'
       path: '/software'
@@ -212,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reviews/$slug': {
+      id: '/reviews/$slug'
+      path: '/reviews/$slug'
+      fullPath: '/reviews/$slug'
+      preLoaderRoute: typeof ReviewsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -222,8 +262,10 @@ const rootRouteChildren: RootRouteChildren = {
   HowToGuidesRoute: HowToGuidesRoute,
   MarketingToolsRoute: MarketingToolsRoute,
   ProductivityRoute: ProductivityRoute,
+  SearchRoute: SearchRoute,
   SoftwareRoute: SoftwareRoute,
   WordpressRoute: WordpressRoute,
+  ReviewsSlugRoute: ReviewsSlugRoute,
   ReviewsIndexRoute: ReviewsIndexRoute,
 }
 export const routeTree = rootRouteImport
