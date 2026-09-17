@@ -10,13 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AffiliateDisclosureRouteImport } from './routes/affiliate-disclosure'
 import { Route as AiToolsRouteImport } from './routes/ai-tools'
 import { Route as ComparisonsRouteImport } from './routes/comparisons'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as HowToGuidesRouteImport } from './routes/how-to-guides'
 import { Route as MarketingToolsRouteImport } from './routes/marketing-tools'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as ProductivityRouteImport } from './routes/productivity'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SoftwareRouteImport } from './routes/software'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WordpressRouteImport } from './routes/wordpress'
 import { Route as ReviewsIndexRouteImport } from './routes/reviews.index'
 import { Route as ReviewsSlugRouteImport } from './routes/reviews.$slug'
@@ -24,6 +29,16 @@ import { Route as ReviewsSlugRouteImport } from './routes/reviews.$slug'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AffiliateDisclosureRoute = AffiliateDisclosureRouteImport.update({
+  id: '/affiliate-disclosure',
+  path: '/affiliate-disclosure',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiToolsRoute = AiToolsRouteImport.update({
@@ -36,6 +51,11 @@ const ComparisonsRoute = ComparisonsRouteImport.update({
   path: '/comparisons',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowToGuidesRoute = HowToGuidesRouteImport.update({
   id: '/how-to-guides',
   path: '/how-to-guides',
@@ -44,6 +64,11 @@ const HowToGuidesRoute = HowToGuidesRouteImport.update({
 const MarketingToolsRoute = MarketingToolsRouteImport.update({
   id: '/marketing-tools',
   path: '/marketing-tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductivityRoute = ProductivityRouteImport.update({
@@ -59,6 +84,11 @@ const SearchRoute = SearchRouteImport.update({
 const SoftwareRoute = SoftwareRouteImport.update({
   id: '/software',
   path: '/software',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WordpressRoute = WordpressRouteImport.update({
@@ -79,26 +109,36 @@ const ReviewsSlugRoute = ReviewsSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/ai-tools': typeof AiToolsRoute
   '/comparisons': typeof ComparisonsRoute
+  '/contact': typeof ContactRoute
   '/how-to-guides': typeof HowToGuidesRoute
   '/marketing-tools': typeof MarketingToolsRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/productivity': typeof ProductivityRoute
   '/search': typeof SearchRoute
   '/software': typeof SoftwareRoute
+  '/terms': typeof TermsRoute
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews/': typeof ReviewsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/ai-tools': typeof AiToolsRoute
   '/comparisons': typeof ComparisonsRoute
+  '/contact': typeof ContactRoute
   '/how-to-guides': typeof HowToGuidesRoute
   '/marketing-tools': typeof MarketingToolsRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/productivity': typeof ProductivityRoute
   '/search': typeof SearchRoute
   '/software': typeof SoftwareRoute
+  '/terms': typeof TermsRoute
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews': typeof ReviewsIndexRoute
@@ -106,13 +146,18 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/ai-tools': typeof AiToolsRoute
   '/comparisons': typeof ComparisonsRoute
+  '/contact': typeof ContactRoute
   '/how-to-guides': typeof HowToGuidesRoute
   '/marketing-tools': typeof MarketingToolsRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/productivity': typeof ProductivityRoute
   '/search': typeof SearchRoute
   '/software': typeof SoftwareRoute
+  '/terms': typeof TermsRoute
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews/': typeof ReviewsIndexRoute
@@ -121,39 +166,54 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/affiliate-disclosure'
     | '/ai-tools'
     | '/comparisons'
+    | '/contact'
     | '/how-to-guides'
     | '/marketing-tools'
+    | '/privacy-policy'
     | '/productivity'
     | '/search'
     | '/software'
+    | '/terms'
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
+    | '/affiliate-disclosure'
     | '/ai-tools'
     | '/comparisons'
+    | '/contact'
     | '/how-to-guides'
     | '/marketing-tools'
+    | '/privacy-policy'
     | '/productivity'
     | '/search'
     | '/software'
+    | '/terms'
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews'
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/affiliate-disclosure'
     | '/ai-tools'
     | '/comparisons'
+    | '/contact'
     | '/how-to-guides'
     | '/marketing-tools'
+    | '/privacy-policy'
     | '/productivity'
     | '/search'
     | '/software'
+    | '/terms'
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews/'
@@ -161,13 +221,18 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AffiliateDisclosureRoute: typeof AffiliateDisclosureRoute
   AiToolsRoute: typeof AiToolsRoute
   ComparisonsRoute: typeof ComparisonsRoute
+  ContactRoute: typeof ContactRoute
   HowToGuidesRoute: typeof HowToGuidesRoute
   MarketingToolsRoute: typeof MarketingToolsRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ProductivityRoute: typeof ProductivityRoute
   SearchRoute: typeof SearchRoute
   SoftwareRoute: typeof SoftwareRoute
+  TermsRoute: typeof TermsRoute
   WordpressRoute: typeof WordpressRoute
   ReviewsSlugRoute: typeof ReviewsSlugRoute
   ReviewsIndexRoute: typeof ReviewsIndexRoute
@@ -180,6 +245,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/affiliate-disclosure': {
+      id: '/affiliate-disclosure'
+      path: '/affiliate-disclosure'
+      fullPath: '/affiliate-disclosure'
+      preLoaderRoute: typeof AffiliateDisclosureRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-tools': {
@@ -196,6 +275,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ComparisonsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-to-guides': {
       id: '/how-to-guides'
       path: '/how-to-guides'
@@ -208,6 +294,13 @@ declare module '@tanstack/react-router' {
       path: '/marketing-tools'
       fullPath: '/marketing-tools'
       preLoaderRoute: typeof MarketingToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/productivity': {
@@ -229,6 +322,13 @@ declare module '@tanstack/react-router' {
       path: '/software'
       fullPath: '/software'
       preLoaderRoute: typeof SoftwareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/wordpress': {
@@ -257,13 +357,18 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AffiliateDisclosureRoute: AffiliateDisclosureRoute,
   AiToolsRoute: AiToolsRoute,
   ComparisonsRoute: ComparisonsRoute,
+  ContactRoute: ContactRoute,
   HowToGuidesRoute: HowToGuidesRoute,
   MarketingToolsRoute: MarketingToolsRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
   ProductivityRoute: ProductivityRoute,
   SearchRoute: SearchRoute,
   SoftwareRoute: SoftwareRoute,
+  TermsRoute: TermsRoute,
   WordpressRoute: WordpressRoute,
   ReviewsSlugRoute: ReviewsSlugRoute,
   ReviewsIndexRoute: ReviewsIndexRoute,
