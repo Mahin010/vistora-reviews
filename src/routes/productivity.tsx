@@ -1,0 +1,45 @@
+import { createFileRoute } from "@tanstack/react-router";
+
+import { CategoryListing } from "@/components/category-page";
+import { listPosts } from "@/lib/content.functions";
+import { validatePageSearch } from "@/lib/route-search";
+import { SITE_NAME } from "@/lib/site";
+
+const TITLE = `Productivity App Reviews — ${SITE_NAME}`;
+const DESCRIPTION =
+  "Project management, note-taking and workflow apps reviewed for teams that need to ship, not tinker.";
+
+export const Route = createFileRoute("/productivity")({
+  validateSearch: validatePageSearch,
+  loaderDeps: ({ search }) => ({ page: search.page ?? 1 }),
+  loader: ({ deps }) => listPosts({ data: { categorySlug: "productivity", page: deps.page } }),
+  head: () => ({
+    meta: [
+      { title: TITLE },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: TITLE },
+      { property: "og:description", content: DESCRIPTION },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "/productivity" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "/productivity" }],
+  }),
+  component: Page,
+});
+
+function Page() {
+  const data = Route.useLoaderData();
+  return (
+    <CategoryListing
+      eyebrow="Category"
+      title={data.category?.name ?? "Productivity"}
+      description={data.category?.description ?? DESCRIPTION}
+      posts={data.posts}
+      total={data.total}
+      page={data.page}
+      pageSize={data.pageSize}
+      basePath="/productivity"
+    />
+  );
+}
