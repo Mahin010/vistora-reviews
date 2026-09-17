@@ -58,7 +58,12 @@ export const getHomeData = createServerFn({ method: "GET" }).handler(async () =>
 
 export const listPosts = createServerFn({ method: "GET" })
   .inputValidator(
-    (input: { categorySlug?: string; postType?: string; page?: number; pageSize?: number }) => input,
+    (input: {
+      categorySlug?: string | undefined;
+      postType?: string | undefined;
+      page?: number | undefined;
+      pageSize?: number | undefined;
+    }) => input,
   )
   .handler(async ({ data }) => {
     const db = publicClient();
@@ -137,7 +142,12 @@ export const getPostBySlug = createServerFn({ method: "GET" })
 
 export const searchPosts = createServerFn({ method: "GET" })
   .inputValidator(
-    (input: { q?: string; categorySlug?: string; product?: string; page?: number }) => input,
+    (input: {
+      q?: string | undefined;
+      categorySlug?: string | undefined;
+      product?: string | undefined;
+      page?: number | undefined;
+    }) => input,
   )
   .handler(async ({ data }) => {
     const db = publicClient();

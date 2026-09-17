@@ -110,7 +110,7 @@ function PostPage() {
   const extraHeadings = [
     post.product_name || post.rating ? { id: "product-overview", text: "At a glance", level: 2 } : null,
     post.key_features?.length ? { id: "key-features", text: "Key features", level: 2 } : null,
-    post.best_for?.length ? { id: "who-its-for", text: "Who it's for", level: 2 } : null,
+    post.who_is_it_for ? { id: "who-its-for", text: "Who it's for", level: 2 } : null,
     post.alternatives?.length ? { id: "alternatives", text: "Alternatives", level: 2 } : null,
     post.verdict ? { id: "verdict", text: "Final verdict", level: 2 } : null,
   ].filter(Boolean) as { id: string; text: string; level: number }[];
@@ -176,7 +176,14 @@ function PostPage() {
             <div className="article-prose mt-12" dangerouslySetInnerHTML={{ __html: html }} />
 
             <Block id="key-features" title="Key features" items={post.key_features ?? []} />
-            <Block id="who-its-for" title="Who it's for" items={post.best_for ?? []} />
+            {post.who_is_it_for ? (
+              <section id="who-its-for" className="mt-12">
+                <h2 className="text-2xl">Who it's for</h2>
+                <p className="mt-4 text-[1.02rem] leading-relaxed text-muted-foreground">
+                  {post.who_is_it_for}
+                </p>
+              </section>
+            ) : null}
 
             {post.how_it_works ? (
               <section id="how-it-works" className="mt-12">

@@ -55,6 +55,7 @@ export type Post = PostCardData & {
   how_it_works: string | null;
   verdict: string | null;
   category_id: string | null;
+  updated_at: string | null;
 };
 
 export type Comment = {

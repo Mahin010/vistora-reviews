@@ -9,7 +9,12 @@ import { Input } from "@/components/ui/input";
 import { searchPosts } from "@/lib/content.functions";
 import { SITE_NAME } from "@/lib/site";
 
-type SearchParams = { q?: string; category?: string; product?: string; page?: number };
+type SearchParams = {
+  q?: string | undefined;
+  category?: string | undefined;
+  product?: string | undefined;
+  page?: number | undefined;
+};
 
 export const Route = createFileRoute("/search")({
   validateSearch: (search: Record<string, unknown>): SearchParams => {
