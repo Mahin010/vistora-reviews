@@ -1,170 +1,98 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Copy, Trash2, Upload } from "lucide-react";
-import { useRef, useState } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 
 import { AdminShell } from "@/components/admin/admin-shell";
-import { Button } from "@/components/ui/button";
+import {
+  MediaDetailsDialog,
+  MediaGrid,
+  MediaUploadButton,
+  useDeleteMedia,
+  useMediaLibrary,
+} from "@/components/admin/media-picker";
 import { Input } from "@/components/ui/input";
-import { useStaff } from "@/hooks/use-staff";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { MediaItem } from "@/lib/admin/media";
+import { formatBytes } from "@/lib/admin/media";
 
 export const Route = createFileRoute("/_authenticated/admin/media")({
-  head: () => ({ meta: [{ title: "Media — Vistora Admin" }, { name: "robots", content: "noindex" }] }),
-  component: Media,
+  head: () => ({ meta: [{ title: "Media — Vistora CMS" }, { name: "robots", content: "noindex" }] }),
+  component: MediaPage,
 });
 
-type MediaRow = {
-  id: string;
-  file_name: string;
-  storage_path: string | null;
-  url: string;
-  alt_text: string | null;
-  mime_type: string | null;
-  created_at: string;
-};
-
-function Media() {
-  const queryClient = useQueryClient();
-  const { data: staff } = useStaff();
-  const inputRef = useRef<HTMLInputElement>(null);
+function MediaPage() {
   const [term, setTerm] = useState("");
+  const [folder, setFolder] = useState("all");
+  const [active, setActive] = useState<MediaItem | null>(null);
+  const queryClient = useQueryClient();
+  const { data: items = [], isLoading } = useMediaLibrary(term);
+  const remove = useDeleteMedia();
 
-  const { data: items = [] } = useQuery({
-    queryKey: ["admin-media"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("media")
-        .select("id, file_name, storage_path, url, alt_text, mime_type, created_at")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      const rows = (data ?? []) as MediaRow[];
-      return Promise.all(
-        rows.map(async (row) => {
-          if (!row.storage_path) return { ...row, displayUrl: row.url };
-          const { data: signed } = await supabase.storage
-            .from("media")
-            .createSignedUrl(row.storage_path, 60 * 60);
-          return { ...row, displayUrl: signed?.signedUrl ?? row.url };
-        }),
-      );
-    },
-  });
-
-  const upload = useMutation({
-    mutationFn: async (file: File) => {
-      const path = `${new Date().getFullYear()}/${Date.now()}-${file.name.replace(/[^\w.-]/g, "-")}`;
-      const { error: storageError } = await supabase.storage.from("media").upload(path, file);
-      if (storageError) throw storageError;
-      const { error } = await supabase.from("media").insert({
-        file_name: file.name,
-        storage_path: path,
-        url: path,
-        mime_type: file.type,
-        size_bytes: file.size,
-        uploaded_by: staff?.id ?? null,
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success("Image uploaded.");
-      void queryClient.invalidateQueries({ queryKey: ["admin-media"] });
-    },
-    onError: (error: Error) => toast.error(error.message),
-  });
-
-  const remove = useMutation({
-    mutationFn: async (row: MediaRow) => {
-      if (row.storage_path) await supabase.storage.from("media").remove([row.storage_path]);
-      const { error } = await supabase.from("media").delete().eq("id", row.id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success("Deleted.");
-      void queryClient.invalidateQueries({ queryKey: ["admin-media"] });
-    },
-    onError: (error: Error) => toast.error(error.message),
-  });
-
-  const visible = items.filter((item) => item.file_name.toLowerCase().includes(term.toLowerCase()));
+  const visible = folder === "all" ? items : items.filter((item) => (item.folder ?? "content") === folder);
+  const totalBytes = items.reduce((sum, item) => sum + (item.size_bytes ?? 0), 0);
 
   return (
     <AdminShell
       title="Media library"
-      description="Upload and reuse images across articles."
+      description={`${items.length} file${items.length === 1 ? "" : "s"} · ${formatBytes(totalBytes)} stored`}
       actions={
-        <>
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) upload.mutate(file);
-              e.target.value = "";
-            }}
-          />
-          <Button onClick={() => inputRef.current?.click()} disabled={upload.isPending}>
-            <Upload className="mr-1 h-4 w-4" /> {upload.isPending ? "Uploading…" : "Upload image"}
-          </Button>
-        </>
+        <MediaUploadButton
+          folder="content"
+          onUploaded={() => {
+            void queryClient.invalidateQueries({ queryKey: ["admin-media"] });
+          }}
+        />
       }
     >
-      <Input
-        value={term}
-        onChange={(e) => setTerm(e.target.value)}
-        placeholder="Search file names…"
-        className="max-w-xs"
-        aria-label="Search media"
-      />
+      <div className="flex flex-wrap items-center gap-2">
+        <Input
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
+          placeholder="Search by file name, title or alt text…"
+          className="max-w-sm"
+          aria-label="Search media"
+        />
+        <Select value={folder} onValueChange={setFolder}>
+          <SelectTrigger className="w-[170px]">
+            <SelectValue placeholder="All folders" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All folders</SelectItem>
+            <SelectItem value="featured">Featured images</SelectItem>
+            <SelectItem value="content">In-content</SelectItem>
+            <SelectItem value="authors">Authors</SelectItem>
+            <SelectItem value="site">Site branding</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
-      {visible.length === 0 ? (
-        <p className="mt-6 rounded-xl border border-dashed p-10 text-center text-sm text-muted-foreground">
-          No images yet. Upload one to get started.
-        </p>
-      ) : (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {visible.map((item) => (
-            <figure key={item.id} className="overflow-hidden rounded-xl border bg-card">
-              {item.displayUrl ? (
-                <img
-                  src={item.displayUrl}
-                  alt={item.alt_text ?? item.file_name}
-                  className="aspect-[4/3] w-full object-cover"
-                />
-              ) : (
-                <div className="aspect-[4/3] w-full bg-muted" />
-              )}
-              <figcaption className="space-y-2 p-3">
-                <p className="truncate text-xs font-medium">{item.file_name}</p>
-                <div className="flex gap-1">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      void navigator.clipboard.writeText(item.displayUrl);
-                      toast.success("Link copied (valid for one hour).");
-                    }}
-                  >
-                    <Copy className="mr-1 h-3.5 w-3.5" /> Copy link
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={() => {
-                      if (confirm(`Delete ${item.file_name}?`)) remove.mutate(item);
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
-                </div>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      )}
+      <div className="mt-5">
+        {isLoading ? (
+          <p className="py-10 text-center text-sm text-muted-foreground">Loading library…</p>
+        ) : visible.length === 0 ? (
+          <p className="rounded-xl border bg-card py-14 text-center text-sm text-muted-foreground">
+            No images yet — upload your first one.
+          </p>
+        ) : (
+          <MediaGrid
+            items={visible}
+            onSelect={(item) => setActive(item)}
+            onDelete={(item) => {
+              if (confirm(`Delete “${item.file_name}”? Posts using it will lose the image.`)) {
+                remove.mutate(item);
+              }
+            }}
+          />
+        )}
+      </div>
+
+      <MediaDetailsDialog item={active} onClose={() => setActive(null)} />
     </AdminShell>
   );
 }
