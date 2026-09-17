@@ -16,8 +16,8 @@ export function CategoryListing({
   basePath,
 }: {
   title: string;
-  description?: string;
-  eyebrow?: string;
+  description?: string | undefined;
+  eyebrow?: string | undefined;
   posts: PostCardData[];
   total: number;
   page: number;
@@ -52,7 +52,7 @@ export function CategoryListing({
                 size="sm"
                 variant={n === page ? "default" : "outline"}
               >
-                <Link to={basePath} search={{ page: n }}>
+                <Link to={basePath as "/reviews"} search={{ page: n }}>
                   {n}
                 </Link>
               </Button>
