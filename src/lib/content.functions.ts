@@ -29,8 +29,9 @@ function publishedQuery(db: SupabaseClient) {
   return db
     .from("posts")
     .select(CARD_FIELDS)
-    .eq("status", "published")
-    .lte("published_at", new Date().toISOString());
+    .in("status", ["published", "scheduled"])
+    .lte("published_at", new Date().toISOString())
+    .is("trashed_at", null);
 }
 
 export const getHomeData = createServerFn({ method: "GET" }).handler(async () => {
@@ -82,8 +83,9 @@ export const listPosts = createServerFn({ method: "GET" })
     let query = db
       .from("posts")
       .select(CARD_FIELDS, { count: "exact" })
-      .eq("status", "published")
-      .lte("published_at", new Date().toISOString());
+      .in("status", ["published", "scheduled"])
+      .lte("published_at", new Date().toISOString())
+    .is("trashed_at", null);
 
     if (categoryId) query = query.eq("category_id", categoryId);
     if (data.postType) query = query.eq("post_type", data.postType);
@@ -109,8 +111,9 @@ export const getPostBySlug = createServerFn({ method: "GET" })
       .from("posts")
       .select(`*, category:categories(name, slug)`)
       .eq("slug", data.slug)
-      .eq("status", "published")
+      .in("status", ["published", "scheduled"])
       .lte("published_at", new Date().toISOString())
+    .is("trashed_at", null)
       .maybeSingle();
 
     if (!post) return { post: null, related: [] as PostCardData[], comments: [] as Comment[] };
@@ -158,8 +161,9 @@ export const searchPosts = createServerFn({ method: "GET" })
     let query = db
       .from("posts")
       .select(CARD_FIELDS, { count: "exact" })
-      .eq("status", "published")
-      .lte("published_at", new Date().toISOString());
+      .in("status", ["published", "scheduled"])
+      .lte("published_at", new Date().toISOString())
+    .is("trashed_at", null);
 
     if (data.q) {
       const term = data.q.replace(/[%,()]/g, " ").trim();
@@ -203,7 +207,8 @@ export const listAllSlugs = createServerFn({ method: "GET" }).handler(async () =
   const { data } = await db
     .from("posts")
     .select("slug, updated_at")
-    .eq("status", "published")
-    .lte("published_at", new Date().toISOString());
+    .in("status", ["published", "scheduled"])
+    .lte("published_at", new Date().toISOString())
+    .is("trashed_at", null);
   return (data ?? []) as { slug: string; updated_at: string }[];
 });
