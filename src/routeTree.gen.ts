@@ -10,11 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AiToolsRouteImport } from './routes/ai-tools'
+import { Route as ComparisonsRouteImport } from './routes/comparisons'
+import { Route as HowToGuidesRouteImport } from './routes/how-to-guides'
+import { Route as MarketingToolsRouteImport } from './routes/marketing-tools'
+import { Route as ProductivityRouteImport } from './routes/productivity'
+import { Route as SoftwareRouteImport } from './routes/software'
+import { Route as WordpressRouteImport } from './routes/wordpress'
 import { Route as ReviewsIndexRouteImport } from './routes/reviews.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiToolsRoute = AiToolsRouteImport.update({
+  id: '/ai-tools',
+  path: '/ai-tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComparisonsRoute = ComparisonsRouteImport.update({
+  id: '/comparisons',
+  path: '/comparisons',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowToGuidesRoute = HowToGuidesRouteImport.update({
+  id: '/how-to-guides',
+  path: '/how-to-guides',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketingToolsRoute = MarketingToolsRouteImport.update({
+  id: '/marketing-tools',
+  path: '/marketing-tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductivityRoute = ProductivityRouteImport.update({
+  id: '/productivity',
+  path: '/productivity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoftwareRoute = SoftwareRouteImport.update({
+  id: '/software',
+  path: '/software',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WordpressRoute = WordpressRouteImport.update({
+  id: '/wordpress',
+  path: '/wordpress',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReviewsIndexRoute = ReviewsIndexRouteImport.update({
@@ -25,27 +67,83 @@ const ReviewsIndexRoute = ReviewsIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-tools': typeof AiToolsRoute
+  '/comparisons': typeof ComparisonsRoute
+  '/how-to-guides': typeof HowToGuidesRoute
+  '/marketing-tools': typeof MarketingToolsRoute
+  '/productivity': typeof ProductivityRoute
+  '/software': typeof SoftwareRoute
+  '/wordpress': typeof WordpressRoute
   '/reviews/': typeof ReviewsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-tools': typeof AiToolsRoute
+  '/comparisons': typeof ComparisonsRoute
+  '/how-to-guides': typeof HowToGuidesRoute
+  '/marketing-tools': typeof MarketingToolsRoute
+  '/productivity': typeof ProductivityRoute
+  '/software': typeof SoftwareRoute
+  '/wordpress': typeof WordpressRoute
   '/reviews': typeof ReviewsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-tools': typeof AiToolsRoute
+  '/comparisons': typeof ComparisonsRoute
+  '/how-to-guides': typeof HowToGuidesRoute
+  '/marketing-tools': typeof MarketingToolsRoute
+  '/productivity': typeof ProductivityRoute
+  '/software': typeof SoftwareRoute
+  '/wordpress': typeof WordpressRoute
   '/reviews/': typeof ReviewsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/reviews/'
+  fullPaths:
+    | '/'
+    | '/ai-tools'
+    | '/comparisons'
+    | '/how-to-guides'
+    | '/marketing-tools'
+    | '/productivity'
+    | '/software'
+    | '/wordpress'
+    | '/reviews/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/reviews'
-  id: '__root__' | '/' | '/reviews/'
+  to:
+    | '/'
+    | '/ai-tools'
+    | '/comparisons'
+    | '/how-to-guides'
+    | '/marketing-tools'
+    | '/productivity'
+    | '/software'
+    | '/wordpress'
+    | '/reviews'
+  id:
+    | '__root__'
+    | '/'
+    | '/ai-tools'
+    | '/comparisons'
+    | '/how-to-guides'
+    | '/marketing-tools'
+    | '/productivity'
+    | '/software'
+    | '/wordpress'
+    | '/reviews/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiToolsRoute: typeof AiToolsRoute
+  ComparisonsRoute: typeof ComparisonsRoute
+  HowToGuidesRoute: typeof HowToGuidesRoute
+  MarketingToolsRoute: typeof MarketingToolsRoute
+  ProductivityRoute: typeof ProductivityRoute
+  SoftwareRoute: typeof SoftwareRoute
+  WordpressRoute: typeof WordpressRoute
   ReviewsIndexRoute: typeof ReviewsIndexRoute
 }
 
@@ -56,6 +154,55 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-tools': {
+      id: '/ai-tools'
+      path: '/ai-tools'
+      fullPath: '/ai-tools'
+      preLoaderRoute: typeof AiToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comparisons': {
+      id: '/comparisons'
+      path: '/comparisons'
+      fullPath: '/comparisons'
+      preLoaderRoute: typeof ComparisonsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-to-guides': {
+      id: '/how-to-guides'
+      path: '/how-to-guides'
+      fullPath: '/how-to-guides'
+      preLoaderRoute: typeof HowToGuidesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/marketing-tools': {
+      id: '/marketing-tools'
+      path: '/marketing-tools'
+      fullPath: '/marketing-tools'
+      preLoaderRoute: typeof MarketingToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/productivity': {
+      id: '/productivity'
+      path: '/productivity'
+      fullPath: '/productivity'
+      preLoaderRoute: typeof ProductivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/software': {
+      id: '/software'
+      path: '/software'
+      fullPath: '/software'
+      preLoaderRoute: typeof SoftwareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wordpress': {
+      id: '/wordpress'
+      path: '/wordpress'
+      fullPath: '/wordpress'
+      preLoaderRoute: typeof WordpressRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reviews/': {
@@ -70,6 +217,13 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiToolsRoute: AiToolsRoute,
+  ComparisonsRoute: ComparisonsRoute,
+  HowToGuidesRoute: HowToGuidesRoute,
+  MarketingToolsRoute: MarketingToolsRoute,
+  ProductivityRoute: ProductivityRoute,
+  SoftwareRoute: SoftwareRoute,
+  WordpressRoute: WordpressRoute,
   ReviewsIndexRoute: ReviewsIndexRoute,
 }
 export const routeTree = rootRouteImport
