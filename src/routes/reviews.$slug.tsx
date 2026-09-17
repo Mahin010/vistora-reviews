@@ -236,7 +236,7 @@ function PostPage() {
           </div>
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
-            <TableOfContents headings={[...extraHeadings, ...headings]} />
+            <TableOfContents headings={[...leadHeadings, ...headings, ...tailHeadings]} />
           </aside>
         </div>
 
