@@ -285,7 +285,7 @@ export function FeaturedImageField({
       <MediaPickerDialog
         open={open}
         onOpenChange={setOpen}
-        folder="featured"
+        folder={folder}
         onSelect={(item) => {
           onChange(item.url);
           if (onAltTextChange && item.alt_text) onAltTextChange(item.alt_text);
