@@ -17,41 +17,70 @@ export const Route = createFileRoute("/_authenticated/admin/settings")({
   component: Settings,
 });
 
+type SettingsRow = {
+  id: number;
+  site_name: string;
+  tagline: string | null;
+  logo_url: string | null;
+  default_seo_title: string | null;
+  default_meta_description: string | null;
+  affiliate_disclosure: string | null;
+  contact_email: string | null;
+  twitter_handle: string | null;
+  linkedin_url: string | null;
+  youtube_url: string | null;
+};
+
 const FIELDS = [
   { key: "site_name", label: "Site name", type: "input" },
   { key: "tagline", label: "Tagline", type: "input" },
+  { key: "logo_url", label: "Logo URL", type: "input" },
   { key: "default_seo_title", label: "Default SEO title", type: "input" },
   { key: "default_meta_description", label: "Default meta description", type: "textarea" },
   { key: "affiliate_disclosure", label: "Affiliate disclosure", type: "textarea" },
   { key: "contact_email", label: "Contact email", type: "input" },
   { key: "twitter_handle", label: "Twitter / X handle", type: "input" },
+  { key: "linkedin_url", label: "LinkedIn URL", type: "input" },
+  { key: "youtube_url", label: "YouTube URL", type: "input" },
 ] as const;
+
+type FieldKey = (typeof FIELDS)[number]["key"];
 
 function Settings() {
   const queryClient = useQueryClient();
   const { data: staff } = useStaff();
   const [values, setValues] = useState<Record<string, string>>({});
 
-  const { data } = useQuery({
+  const { data: settings } = useQuery({
     queryKey: ["admin-settings"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("site_settings").select("key, value");
+      const { data, error } = await supabase.from("site_settings").select("*").limit(1).maybeSingle();
       if (error) throw error;
-      return (data ?? []) as { key: string; value: string | null }[];
+      return (data ?? null) as SettingsRow | null;
     },
   });
 
   useEffect(() => {
-    if (!data) return;
-    setValues(Object.fromEntries(data.map((row) => [row.key, row.value ?? ""])));
-  }, [data]);
+    if (!settings) return;
+    setValues(
+      Object.fromEntries(FIELDS.map((f) => [f.key, String(settings[f.key as FieldKey] ?? "")])),
+    );
+  }, [settings]);
 
   const save = useMutation({
     mutationFn: async () => {
-      for (const field of FIELDS) {
+      const payload = Object.fromEntries(
+        FIELDS.map((f) => [f.key, values[f.key]?.trim() ? values[f.key] : null]),
+      ) as Partial<SettingsRow>;
+      if (!payload.site_name) payload.site_name = "Vistora Reviews";
+
+      if (settings) {
+        const { error } = await supabase.from("site_settings").update(payload).eq("id", settings.id);
+        if (error) throw error;
+      } else {
         const { error } = await supabase
           .from("site_settings")
-          .upsert({ key: field.key, value: values[field.key] ?? "" }, { onConflict: "key" });
+          .insert({ ...payload, site_name: payload.site_name });
         if (error) throw error;
       }
     },

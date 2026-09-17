@@ -18,7 +18,8 @@ export const Route = createFileRoute("/_authenticated/admin/media")({
 type MediaRow = {
   id: string;
   file_name: string;
-  file_path: string;
+  storage_path: string | null;
+  url: string;
   alt_text: string | null;
   mime_type: string | null;
   created_at: string;
@@ -35,19 +36,19 @@ function Media() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("media")
-        .select("id, file_name, file_path, alt_text, mime_type, created_at")
+        .select("id, file_name, storage_path, url, alt_text, mime_type, created_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
       const rows = (data ?? []) as MediaRow[];
-      const signed = await Promise.all(
+      return Promise.all(
         rows.map(async (row) => {
-          const { data: url } = await supabase.storage
+          if (!row.storage_path) return { ...row, displayUrl: row.url };
+          const { data: signed } = await supabase.storage
             .from("media")
-            .createSignedUrl(row.file_path, 60 * 60);
-          return { ...row, url: url?.signedUrl ?? "" };
+            .createSignedUrl(row.storage_path, 60 * 60);
+          return { ...row, displayUrl: signed?.signedUrl ?? row.url };
         }),
       );
-      return signed;
     },
   });
 
@@ -58,9 +59,10 @@ function Media() {
       if (storageError) throw storageError;
       const { error } = await supabase.from("media").insert({
         file_name: file.name,
-        file_path: path,
+        storage_path: path,
+        url: path,
         mime_type: file.type,
-        file_size: file.size,
+        size_bytes: file.size,
         uploaded_by: staff?.id ?? null,
       });
       if (error) throw error;
@@ -74,7 +76,7 @@ function Media() {
 
   const remove = useMutation({
     mutationFn: async (row: MediaRow) => {
-      await supabase.storage.from("media").remove([row.file_path]);
+      if (row.storage_path) await supabase.storage.from("media").remove([row.storage_path]);
       const { error } = await supabase.from("media").delete().eq("id", row.id);
       if (error) throw error;
     },
@@ -85,9 +87,7 @@ function Media() {
     onError: (error: Error) => toast.error(error.message),
   });
 
-  const visible = items.filter((item) =>
-    item.file_name.toLowerCase().includes(term.toLowerCase()),
-  );
+  const visible = items.filter((item) => item.file_name.toLowerCase().includes(term.toLowerCase()));
 
   return (
     <AdminShell
@@ -128,8 +128,12 @@ function Media() {
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {visible.map((item) => (
             <figure key={item.id} className="overflow-hidden rounded-xl border bg-card">
-              {item.url ? (
-                <img src={item.url} alt={item.alt_text ?? item.file_name} className="aspect-[4/3] w-full object-cover" />
+              {item.displayUrl ? (
+                <img
+                  src={item.displayUrl}
+                  alt={item.alt_text ?? item.file_name}
+                  className="aspect-[4/3] w-full object-cover"
+                />
               ) : (
                 <div className="aspect-[4/3] w-full bg-muted" />
               )}
@@ -140,7 +144,7 @@ function Media() {
                     size="sm"
                     variant="outline"
                     onClick={() => {
-                      void navigator.clipboard.writeText(item.url);
+                      void navigator.clipboard.writeText(item.displayUrl);
                       toast.success("Link copied (valid for one hour).");
                     }}
                   >
