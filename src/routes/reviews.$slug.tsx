@@ -107,10 +107,14 @@ function PostPage() {
 
   const { html, headings } = withHeadingIds(post.content ?? "");
 
-  const extraHeadings = [
+  const leadHeadings = [
     post.product_name || post.rating ? { id: "product-overview", text: "At a glance", level: 2 } : null,
+  ].filter(Boolean) as { id: string; text: string; level: number }[];
+
+  const tailHeadings = [
     post.key_features?.length ? { id: "key-features", text: "Key features", level: 2 } : null,
     post.who_is_it_for ? { id: "who-its-for", text: "Who it's for", level: 2 } : null,
+    post.how_it_works ? { id: "how-it-works", text: "How it works", level: 2 } : null,
     post.alternatives?.length ? { id: "alternatives", text: "Alternatives", level: 2 } : null,
     post.verdict ? { id: "verdict", text: "Final verdict", level: 2 } : null,
   ].filter(Boolean) as { id: string; text: string; level: number }[];
