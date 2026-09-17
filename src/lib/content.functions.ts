@@ -39,11 +39,20 @@ export const getHomeData = createServerFn({ method: "GET" }).handler(async () =>
 
   const [featured, latestReviews, popular, latestArticles, comparisons, categories] =
     await Promise.all([
-      publishedQuery(db).eq("is_featured", true).order("published_at", { ascending: false }).limit(1),
-      publishedQuery(db).eq("post_type", "review").order("published_at", { ascending: false }).limit(6),
+      publishedQuery(db)
+        .eq("is_featured", true)
+        .order("published_at", { ascending: false })
+        .limit(1),
+      publishedQuery(db)
+        .eq("post_type", "review")
+        .order("published_at", { ascending: false })
+        .limit(6),
       publishedQuery(db).order("view_count", { ascending: false }).limit(5),
       publishedQuery(db).order("published_at", { ascending: false }).limit(6),
-      publishedQuery(db).eq("post_type", "comparison").order("published_at", { ascending: false }).limit(3),
+      publishedQuery(db)
+        .eq("post_type", "comparison")
+        .order("published_at", { ascending: false })
+        .limit(3),
       db.from("categories").select("*").order("sort_order"),
     ]);
 
@@ -75,7 +84,11 @@ export const listPosts = createServerFn({ method: "GET" })
     let categoryId: string | null = null;
     let category: Category | null = null;
     if (data.categorySlug) {
-      const res = await db.from("categories").select("*").eq("slug", data.categorySlug).maybeSingle();
+      const res = await db
+        .from("categories")
+        .select("*")
+        .eq("slug", data.categorySlug)
+        .maybeSingle();
       category = (res.data ?? null) as Category | null;
       categoryId = category?.id ?? null;
     }
@@ -85,7 +98,7 @@ export const listPosts = createServerFn({ method: "GET" })
       .select(CARD_FIELDS, { count: "exact" })
       .in("status", ["published", "scheduled"])
       .lte("published_at", new Date().toISOString())
-    .is("trashed_at", null);
+      .is("trashed_at", null);
 
     if (categoryId) query = query.eq("category_id", categoryId);
     if (data.postType) query = query.eq("post_type", data.postType);
@@ -113,7 +126,7 @@ export const getPostBySlug = createServerFn({ method: "GET" })
       .eq("slug", data.slug)
       .in("status", ["published", "scheduled"])
       .lte("published_at", new Date().toISOString())
-    .is("trashed_at", null)
+      .is("trashed_at", null)
       .maybeSingle();
 
     if (!post) return { post: null, related: [] as PostCardData[], comments: [] as Comment[] };
@@ -127,7 +140,10 @@ export const getPostBySlug = createServerFn({ method: "GET" })
             .neq("id", typed.id)
             .order("published_at", { ascending: false })
             .limit(3)
-        : publishedQuery(db).neq("id", typed.id).order("published_at", { ascending: false }).limit(3),
+        : publishedQuery(db)
+            .neq("id", typed.id)
+            .order("published_at", { ascending: false })
+            .limit(3),
       db
         .from("comments")
         .select("id, author_name, content, created_at")
@@ -163,7 +179,7 @@ export const searchPosts = createServerFn({ method: "GET" })
       .select(CARD_FIELDS, { count: "exact" })
       .in("status", ["published", "scheduled"])
       .lte("published_at", new Date().toISOString())
-    .is("trashed_at", null);
+      .is("trashed_at", null);
 
     if (data.q) {
       const term = data.q.replace(/[%,()]/g, " ").trim();
@@ -176,7 +192,11 @@ export const searchPosts = createServerFn({ method: "GET" })
     if (data.product) query = query.ilike("product_name", `%${data.product}%`);
 
     if (data.categorySlug) {
-      const res = await db.from("categories").select("id").eq("slug", data.categorySlug).maybeSingle();
+      const res = await db
+        .from("categories")
+        .select("id")
+        .eq("slug", data.categorySlug)
+        .maybeSingle();
       const id = (res.data as { id: string } | null)?.id;
       if (id) query = query.eq("category_id", id);
     }
