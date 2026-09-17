@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AffiliateDisclosureRouteImport } from './routes/affiliate-disclosure'
 import { Route as AiToolsRouteImport } from './routes/ai-tools'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ComparisonsRouteImport } from './routes/comparisons'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as HowToGuidesRouteImport } from './routes/how-to-guides'
@@ -25,10 +27,15 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WordpressRouteImport } from './routes/wordpress'
 import { Route as ReviewsIndexRouteImport } from './routes/reviews.index'
 import { Route as ReviewsSlugRouteImport } from './routes/reviews.$slug'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -44,6 +51,11 @@ const AffiliateDisclosureRoute = AffiliateDisclosureRouteImport.update({
 const AiToolsRoute = AiToolsRouteImport.update({
   id: '/ai-tools',
   path: '/ai-tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComparisonsRoute = ComparisonsRouteImport.update({
@@ -106,12 +118,18 @@ const ReviewsSlugRoute = ReviewsSlugRouteImport.update({
   path: '/reviews/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/ai-tools': typeof AiToolsRoute
+  '/auth': typeof AuthRoute
   '/comparisons': typeof ComparisonsRoute
   '/contact': typeof ContactRoute
   '/how-to-guides': typeof HowToGuidesRoute
@@ -124,12 +142,14 @@ export interface FileRoutesByFullPath {
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews/': typeof ReviewsIndexRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/ai-tools': typeof AiToolsRoute
+  '/auth': typeof AuthRoute
   '/comparisons': typeof ComparisonsRoute
   '/contact': typeof ContactRoute
   '/how-to-guides': typeof HowToGuidesRoute
@@ -142,13 +162,16 @@ export interface FileRoutesByTo {
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews': typeof ReviewsIndexRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/ai-tools': typeof AiToolsRoute
+  '/auth': typeof AuthRoute
   '/comparisons': typeof ComparisonsRoute
   '/contact': typeof ContactRoute
   '/how-to-guides': typeof HowToGuidesRoute
@@ -161,6 +184,7 @@ export interface FileRoutesById {
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews/': typeof ReviewsIndexRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -169,6 +193,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/affiliate-disclosure'
     | '/ai-tools'
+    | '/auth'
     | '/comparisons'
     | '/contact'
     | '/how-to-guides'
@@ -181,12 +206,14 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews/'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/affiliate-disclosure'
     | '/ai-tools'
+    | '/auth'
     | '/comparisons'
     | '/contact'
     | '/how-to-guides'
@@ -199,12 +226,15 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/about'
     | '/affiliate-disclosure'
     | '/ai-tools'
+    | '/auth'
     | '/comparisons'
     | '/contact'
     | '/how-to-guides'
@@ -217,13 +247,16 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews/'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AffiliateDisclosureRoute: typeof AffiliateDisclosureRoute
   AiToolsRoute: typeof AiToolsRoute
+  AuthRoute: typeof AuthRoute
   ComparisonsRoute: typeof ComparisonsRoute
   ContactRoute: typeof ContactRoute
   HowToGuidesRoute: typeof HowToGuidesRoute
@@ -247,6 +280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -266,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/ai-tools'
       fullPath: '/ai-tools'
       preLoaderRoute: typeof AiToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/comparisons': {
@@ -352,14 +399,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AffiliateDisclosureRoute: AffiliateDisclosureRoute,
   AiToolsRoute: AiToolsRoute,
+  AuthRoute: AuthRoute,
   ComparisonsRoute: ComparisonsRoute,
   ContactRoute: ContactRoute,
   HowToGuidesRoute: HowToGuidesRoute,
