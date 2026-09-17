@@ -119,9 +119,17 @@ const NAV: NavItem[] = [
       { label: "Affiliate", to: "/admin/settings", search: { tab: "affiliate" } },
     ],
   },
-  { label: "Tools", to: "/admin/tools", icon: Wrench },
-  { label: "System status", to: "/admin/tools", icon: BarChart3, children: undefined },
+  {
+    label: "Tools",
+    to: "/admin/tools",
+    icon: Wrench,
+    children: [
+      { label: "Tools", to: "/admin/tools" },
+      { label: "System status", to: "/admin/tools", search: { tab: "status" } },
+    ],
+  },
 ];
+void BarChart3;
 
 function NavList({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
   const { data: staff } = useStaff();
