@@ -28,7 +28,8 @@ export function useStaff() {
       return {
         id: user.id,
         email: user.email ?? "",
-        fullName: (profile.data as { full_name?: string | null } | null)?.full_name ?? user.email ?? "",
+        fullName:
+          (profile.data as { display_name?: string | null } | null)?.display_name ?? user.email ?? "",
         role,
         canManageAll: role === "admin" || role === "editor",
       };
