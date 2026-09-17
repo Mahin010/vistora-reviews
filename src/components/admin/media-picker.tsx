@@ -221,11 +221,13 @@ export function FeaturedImageField({
   onChange,
   altText,
   onAltTextChange,
+  folder = "featured",
 }: {
   value: string | null;
   onChange: (url: string | null) => void;
   altText?: string;
   onAltTextChange?: (value: string) => void;
+  folder?: MediaFolder;
 }) {
   const [open, setOpen] = useState(false);
 
