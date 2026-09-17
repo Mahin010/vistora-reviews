@@ -2,14 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { CategoryListing } from "@/components/category-page";
 import { listPosts } from "@/lib/content.functions";
+import { validatePageSearch } from "@/lib/route-search";
 import { SITE_NAME } from "@/lib/site";
 
 const DESCRIPTION =
   "Every hands-on review we publish, newest first: AI tools, SaaS platforms, marketing software, productivity apps and WordPress products.";
 
 export const Route = createFileRoute("/reviews/")({
-  validateSearch: (search: Record<string, unknown>) => ({ page: Number(search.page) || 1 }),
-  loaderDeps: ({ search }) => ({ page: search.page }),
+  validateSearch: validatePageSearch,
+  loaderDeps: ({ search }) => ({ page: search.page ?? 1 }),
   loader: ({ deps }) => listPosts({ data: { page: deps.page } }),
   head: () => ({
     meta: [
