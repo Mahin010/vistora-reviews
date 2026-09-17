@@ -20,7 +20,9 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          image_url: string | null
           name: string
+          parent_id: string | null
           slug: string
           sort_order: number
           updated_at: string
@@ -30,7 +32,9 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           name: string
+          parent_id?: string | null
           slug: string
           sort_order?: number
           updated_at?: string
@@ -40,12 +44,22 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           name?: string
+          parent_id?: string | null
           slug?: string
           sort_order?: number
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       comments: {
         Row: {
@@ -56,6 +70,7 @@ export type Database = {
           id: string
           is_approved: boolean
           post_id: string
+          status: string
         }
         Insert: {
           author_email?: string | null
@@ -65,6 +80,7 @@ export type Database = {
           id?: string
           is_approved?: boolean
           post_id: string
+          status?: string
         }
         Update: {
           author_email?: string | null
@@ -74,6 +90,7 @@ export type Database = {
           id?: string
           is_approved?: boolean
           post_id?: string
+          status?: string
         }
         Relationships: [
           {
@@ -118,34 +135,46 @@ export type Database = {
       media: {
         Row: {
           alt_text: string | null
+          caption: string | null
           created_at: string
+          description: string | null
           file_name: string
+          folder: string | null
           id: string
           mime_type: string | null
           size_bytes: number | null
           storage_path: string | null
+          title: string | null
           uploaded_by: string | null
           url: string
         }
         Insert: {
           alt_text?: string | null
+          caption?: string | null
           created_at?: string
+          description?: string | null
           file_name: string
+          folder?: string | null
           id?: string
           mime_type?: string | null
           size_bytes?: number | null
           storage_path?: string | null
+          title?: string | null
           uploaded_by?: string | null
           url: string
         }
         Update: {
           alt_text?: string | null
+          caption?: string | null
           created_at?: string
+          description?: string | null
           file_name?: string
+          folder?: string | null
           id?: string
           mime_type?: string | null
           size_bytes?: number | null
           storage_path?: string | null
+          title?: string | null
           uploaded_by?: string | null
           url?: string
         }
@@ -176,6 +205,50 @@ export type Database = {
           id?: string
         }
         Relationships: []
+      }
+      post_revisions: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          created_by_name: string | null
+          excerpt: string | null
+          id: string
+          post_id: string
+          snapshot: Json
+          title: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          created_by_name?: string | null
+          excerpt?: string | null
+          id?: string
+          post_id: string
+          snapshot?: Json
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          created_by_name?: string | null
+          excerpt?: string | null
+          id?: string
+          post_id?: string
+          snapshot?: Json
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_revisions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       post_tags: {
         Row: {
@@ -220,6 +293,8 @@ export type Database = {
           category_id: string | null
           cons: string[]
           content: string
+          coupon_code: string | null
+          coupon_url: string | null
           created_at: string
           excerpt: string | null
           featured_image: string | null
@@ -229,18 +304,25 @@ export type Database = {
           is_featured: boolean
           key_features: string[]
           meta_description: string | null
+          money_back_guarantee: string | null
+          og_description: string | null
+          og_title: string | null
           post_type: Database["public"]["Enums"]["post_type"]
           pricing_summary: string | null
           product_name: string | null
+          product_type: string | null
           product_url: string | null
           pros: string[]
           published_at: string | null
           rating: number | null
           reading_time: number
+          robots_meta: string | null
           seo_title: string | null
           slug: string
+          social_image: string | null
           status: Database["public"]["Enums"]["post_status"]
           title: string
+          trashed_at: string | null
           updated_at: string
           verdict: string | null
           view_count: number
@@ -258,6 +340,8 @@ export type Database = {
           category_id?: string | null
           cons?: string[]
           content?: string
+          coupon_code?: string | null
+          coupon_url?: string | null
           created_at?: string
           excerpt?: string | null
           featured_image?: string | null
@@ -267,18 +351,25 @@ export type Database = {
           is_featured?: boolean
           key_features?: string[]
           meta_description?: string | null
+          money_back_guarantee?: string | null
+          og_description?: string | null
+          og_title?: string | null
           post_type?: Database["public"]["Enums"]["post_type"]
           pricing_summary?: string | null
           product_name?: string | null
+          product_type?: string | null
           product_url?: string | null
           pros?: string[]
           published_at?: string | null
           rating?: number | null
           reading_time?: number
+          robots_meta?: string | null
           seo_title?: string | null
           slug: string
+          social_image?: string | null
           status?: Database["public"]["Enums"]["post_status"]
           title: string
+          trashed_at?: string | null
           updated_at?: string
           verdict?: string | null
           view_count?: number
@@ -296,6 +387,8 @@ export type Database = {
           category_id?: string | null
           cons?: string[]
           content?: string
+          coupon_code?: string | null
+          coupon_url?: string | null
           created_at?: string
           excerpt?: string | null
           featured_image?: string | null
@@ -305,18 +398,25 @@ export type Database = {
           is_featured?: boolean
           key_features?: string[]
           meta_description?: string | null
+          money_back_guarantee?: string | null
+          og_description?: string | null
+          og_title?: string | null
           post_type?: Database["public"]["Enums"]["post_type"]
           pricing_summary?: string | null
           product_name?: string | null
+          product_type?: string | null
           product_url?: string | null
           pros?: string[]
           published_at?: string | null
           rating?: number | null
           reading_time?: number
+          robots_meta?: string | null
           seo_title?: string | null
           slug?: string
+          social_image?: string | null
           status?: Database["public"]["Enums"]["post_status"]
           title?: string
+          trashed_at?: string | null
           updated_at?: string
           verdict?: string | null
           view_count?: number
@@ -371,48 +471,101 @@ export type Database = {
       }
       site_settings: {
         Row: {
+          admin_email: string | null
           affiliate_disclosure: string | null
+          comments_enabled: boolean
+          comments_require_approval: boolean
           contact_email: string | null
+          default_affiliate_cta: string | null
+          default_category_id: string | null
           default_meta_description: string | null
+          default_post_type: string | null
+          default_robots: string | null
           default_seo_title: string | null
+          favicon_url: string | null
+          footer_text: string | null
           id: number
           linkedin_url: string | null
           logo_url: string | null
+          max_upload_mb: number
+          posts_per_page: number
           site_name: string
+          site_url: string | null
+          sitemap_enabled: boolean
+          social_image: string | null
           tagline: string | null
+          timezone: string | null
           twitter_handle: string | null
           updated_at: string
           youtube_url: string | null
         }
         Insert: {
+          admin_email?: string | null
           affiliate_disclosure?: string | null
+          comments_enabled?: boolean
+          comments_require_approval?: boolean
           contact_email?: string | null
+          default_affiliate_cta?: string | null
+          default_category_id?: string | null
           default_meta_description?: string | null
+          default_post_type?: string | null
+          default_robots?: string | null
           default_seo_title?: string | null
+          favicon_url?: string | null
+          footer_text?: string | null
           id?: number
           linkedin_url?: string | null
           logo_url?: string | null
+          max_upload_mb?: number
+          posts_per_page?: number
           site_name?: string
+          site_url?: string | null
+          sitemap_enabled?: boolean
+          social_image?: string | null
           tagline?: string | null
+          timezone?: string | null
           twitter_handle?: string | null
           updated_at?: string
           youtube_url?: string | null
         }
         Update: {
+          admin_email?: string | null
           affiliate_disclosure?: string | null
+          comments_enabled?: boolean
+          comments_require_approval?: boolean
           contact_email?: string | null
+          default_affiliate_cta?: string | null
+          default_category_id?: string | null
           default_meta_description?: string | null
+          default_post_type?: string | null
+          default_robots?: string | null
           default_seo_title?: string | null
+          favicon_url?: string | null
+          footer_text?: string | null
           id?: number
           linkedin_url?: string | null
           logo_url?: string | null
+          max_upload_mb?: number
+          posts_per_page?: number
           site_name?: string
+          site_url?: string | null
+          sitemap_enabled?: boolean
+          social_image?: string | null
           tagline?: string | null
+          timezone?: string | null
           twitter_handle?: string | null
           updated_at?: string
           youtube_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "site_settings_default_category_id_fkey"
+            columns: ["default_category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tags: {
         Row: {
