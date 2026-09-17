@@ -204,8 +204,8 @@ function PostEditor() {
         content: form.content,
         featured_image: form.featured_image.trim() || null,
         category_id: form.category_id || null,
-        post_type: form.post_type,
-        status,
+        post_type: form.post_type as "review" | "comparison" | "guide" | "article",
+        status: status as "draft" | "scheduled" | "published",
         published_at:
           status === "draft"
             ? null
