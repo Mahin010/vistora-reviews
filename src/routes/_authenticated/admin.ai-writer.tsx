@@ -11,7 +11,7 @@ import {
   Trash2,
   Wand2,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { cloneElement, isValidElement, useMemo, useState, type ReactElement } from "react";
 import { toast } from "sonner";
 
 import { AdminShell } from "@/components/admin/admin-shell";
@@ -1028,11 +1028,18 @@ function AiWriterPage() {
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, children }: { label: string; children: React.ReactElement }) {
+  const id = `f-${label.replace(/[^\w]+/g, "-").toLowerCase()}`;
+  const control = isValidElement(children)
+    ? cloneElement(children as ReactElement<{ id?: string; "aria-label"?: string }>, {
+        id,
+        "aria-label": label,
+      })
+    : children;
   return (
     <div className="space-y-1.5">
-      <Label>{label}</Label>
-      {children}
+      <Label htmlFor={id}>{label}</Label>
+      {control}
     </div>
   );
 }
