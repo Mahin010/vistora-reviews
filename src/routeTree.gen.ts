@@ -28,6 +28,7 @@ import { Route as WordpressRouteImport } from './routes/wordpress'
 import { Route as ReviewsIndexRouteImport } from './routes/reviews.index'
 import { Route as ReviewsSlugRouteImport } from './routes/reviews.$slug'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminAiWriterRouteImport } from './routes/_authenticated/admin.ai-writer'
 import { Route as AuthenticatedAdminAppearanceRouteImport } from './routes/_authenticated/admin.appearance'
 import { Route as AuthenticatedAdminCategoriesRouteImport } from './routes/_authenticated/admin.categories'
 import { Route as AuthenticatedAdminCommentsRouteImport } from './routes/_authenticated/admin.comments'
@@ -134,6 +135,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminAiWriterRoute =
+  AuthenticatedAdminAiWriterRouteImport.update({
+    id: '/admin/ai-writer',
+    path: '/admin/ai-writer',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminAppearanceRoute =
   AuthenticatedAdminAppearanceRouteImport.update({
     id: '/admin/appearance',
@@ -215,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews/': typeof ReviewsIndexRoute
+  '/admin/ai-writer': typeof AuthenticatedAdminAiWriterRoute
   '/admin/appearance': typeof AuthenticatedAdminAppearanceRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/comments': typeof AuthenticatedAdminCommentsRoute
@@ -246,6 +254,7 @@ export interface FileRoutesByTo {
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews': typeof ReviewsIndexRoute
+  '/admin/ai-writer': typeof AuthenticatedAdminAiWriterRoute
   '/admin/appearance': typeof AuthenticatedAdminAppearanceRoute
   '/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/admin/comments': typeof AuthenticatedAdminCommentsRoute
@@ -279,6 +288,7 @@ export interface FileRoutesById {
   '/wordpress': typeof WordpressRoute
   '/reviews/$slug': typeof ReviewsSlugRoute
   '/reviews/': typeof ReviewsIndexRoute
+  '/_authenticated/admin/ai-writer': typeof AuthenticatedAdminAiWriterRoute
   '/_authenticated/admin/appearance': typeof AuthenticatedAdminAppearanceRoute
   '/_authenticated/admin/categories': typeof AuthenticatedAdminCategoriesRoute
   '/_authenticated/admin/comments': typeof AuthenticatedAdminCommentsRoute
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews/'
+    | '/admin/ai-writer'
     | '/admin/appearance'
     | '/admin/categories'
     | '/admin/comments'
@@ -343,6 +354,7 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews'
+    | '/admin/ai-writer'
     | '/admin/appearance'
     | '/admin/categories'
     | '/admin/comments'
@@ -375,6 +387,7 @@ export interface FileRouteTypes {
     | '/wordpress'
     | '/reviews/$slug'
     | '/reviews/'
+    | '/_authenticated/admin/ai-writer'
     | '/_authenticated/admin/appearance'
     | '/_authenticated/admin/categories'
     | '/_authenticated/admin/comments'
@@ -545,6 +558,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/ai-writer': {
+      id: '/_authenticated/admin/ai-writer'
+      path: '/admin/ai-writer'
+      fullPath: '/admin/ai-writer'
+      preLoaderRoute: typeof AuthenticatedAdminAiWriterRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin/appearance': {
       id: '/_authenticated/admin/appearance'
       path: '/admin/appearance'
@@ -626,6 +646,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminAiWriterRoute: typeof AuthenticatedAdminAiWriterRoute
   AuthenticatedAdminAppearanceRoute: typeof AuthenticatedAdminAppearanceRoute
   AuthenticatedAdminCategoriesRoute: typeof AuthenticatedAdminCategoriesRoute
   AuthenticatedAdminCommentsRoute: typeof AuthenticatedAdminCommentsRoute
@@ -641,6 +662,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminAiWriterRoute: AuthenticatedAdminAiWriterRoute,
   AuthenticatedAdminAppearanceRoute: AuthenticatedAdminAppearanceRoute,
   AuthenticatedAdminCategoriesRoute: AuthenticatedAdminCategoriesRoute,
   AuthenticatedAdminCommentsRoute: AuthenticatedAdminCommentsRoute,

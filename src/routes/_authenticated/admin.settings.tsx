@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { useStaff } from "@/hooks/use-staff";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
@@ -46,6 +47,15 @@ type SettingsForm = {
   twitter_handle: string;
   linkedin_url: string;
   youtube_url: string;
+  ai_provider: string;
+  ai_model: string;
+  ai_default_language: string;
+  ai_default_tone: string;
+  ai_default_word_count: number;
+  ai_default_audience: string;
+  ai_max_words: number;
+  ai_images_enabled: boolean;
+  ai_tools_enabled: boolean;
 };
 
 const EMPTY: SettingsForm = {
@@ -70,11 +80,22 @@ const EMPTY: SettingsForm = {
   twitter_handle: "",
   linkedin_url: "",
   youtube_url: "",
+  ai_provider: "lovable",
+  ai_model: "openai/gpt-6-astra",
+  ai_default_language: "English",
+  ai_default_tone: "Natural",
+  ai_default_word_count: 1500,
+  ai_default_audience: "US audience",
+  ai_max_words: 3000,
+  ai_images_enabled: true,
+  ai_tools_enabled: true,
 };
 
 function SettingsPage() {
   const queryClient = useQueryClient();
   const [form, setForm] = useState<SettingsForm>(EMPTY);
+  const { data: staff } = useStaff();
+  const isAdmin = staff?.role === "admin";
 
   const { data: categories = [] } = useQuery({
     queryKey: ["admin-categories-lite"],
@@ -117,6 +138,15 @@ function SettingsPage() {
       twitter_handle: settings.twitter_handle ?? "",
       linkedin_url: settings.linkedin_url ?? "",
       youtube_url: settings.youtube_url ?? "",
+      ai_provider: settings.ai_provider ?? "lovable",
+      ai_model: settings.ai_model ?? "openai/gpt-6-astra",
+      ai_default_language: settings.ai_default_language ?? "English",
+      ai_default_tone: settings.ai_default_tone ?? "Natural",
+      ai_default_word_count: settings.ai_default_word_count ?? 1500,
+      ai_default_audience: settings.ai_default_audience ?? "US audience",
+      ai_max_words: settings.ai_max_words ?? 3000,
+      ai_images_enabled: settings.ai_images_enabled ?? true,
+      ai_tools_enabled: settings.ai_tools_enabled ?? true,
     });
   }, [settings]);
 
@@ -146,6 +176,15 @@ function SettingsPage() {
           twitter_handle: form.twitter_handle.trim() || null,
           linkedin_url: form.linkedin_url.trim() || null,
           youtube_url: form.youtube_url.trim() || null,
+          ai_provider: form.ai_provider,
+          ai_model: form.ai_model.trim() || "openai/gpt-6-astra",
+          ai_default_language: form.ai_default_language,
+          ai_default_tone: form.ai_default_tone,
+          ai_default_word_count: Number(form.ai_default_word_count) || 1500,
+          ai_default_audience: form.ai_default_audience.trim() || "US audience",
+          ai_max_words: Number(form.ai_max_words) || 3000,
+          ai_images_enabled: form.ai_images_enabled,
+          ai_tools_enabled: form.ai_tools_enabled,
         })
         .eq("id", 1);
       if (error) throw error;
@@ -178,6 +217,7 @@ function SettingsPage() {
           <TabsTrigger value="seo">SEO</TabsTrigger>
           <TabsTrigger value="affiliate">Affiliate</TabsTrigger>
           <TabsTrigger value="media">Media</TabsTrigger>
+          <TabsTrigger value="ai">AI Writer</TabsTrigger>
         </TabsList>
 
         <TabsContent value="general" className="mt-5 grid gap-4 rounded-xl border bg-card p-5 sm:grid-cols-2">
@@ -322,6 +362,119 @@ function SettingsPage() {
             <p className="text-xs text-muted-foreground">
               Images are stored securely and only JPG, PNG, WEBP and GIF files are accepted.
             </p>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="ai" className="mt-5 space-y-5">
+          <div className="grid gap-4 rounded-xl border bg-card p-5 sm:grid-cols-2">
+            <div className="space-y-1">
+              <Label>AI provider</Label>
+              <Select
+                value={form.ai_provider}
+                onValueChange={(v) => set("ai_provider", v)}
+                disabled={!isAdmin}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="lovable">Built-in AI (recommended)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Credentials stay on the server and are never exposed to visitors.
+              </p>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="ai-model">Model</Label>
+              <Input
+                id="ai-model"
+                value={form.ai_model}
+                onChange={(e) => set("ai_model", e.target.value)}
+                disabled={!isAdmin}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>Default language</Label>
+              <Select
+                value={form.ai_default_language}
+                onValueChange={(v) => set("ai_default_language", v)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="English">English</SelectItem>
+                  <SelectItem value="Bengali">Bengali</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label>Default tone</Label>
+              <Select value={form.ai_default_tone} onValueChange={(v) => set("ai_default_tone", v)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {["Natural", "Professional", "Conversational", "Friendly", "Informative", "Expert", "Casual"].map(
+                    (tone) => (
+                      <SelectItem key={tone} value={tone}>
+                        {tone}
+                      </SelectItem>
+                    ),
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="ai-words">Default word count</Label>
+              <Input
+                id="ai-words"
+                type="number"
+                min="300"
+                max="6000"
+                value={form.ai_default_word_count}
+                onChange={(e) => set("ai_default_word_count", Number(e.target.value))}
+              />
+            </div>
+            <Text
+              label="Default audience"
+              value={form.ai_default_audience}
+              onChange={(v) => set("ai_default_audience", v)}
+            />
+            <div className="space-y-1">
+              <Label htmlFor="ai-max">Maximum generation length (words)</Label>
+              <Input
+                id="ai-max"
+                type="number"
+                min="500"
+                max="6000"
+                value={form.ai_max_words}
+                onChange={(e) => set("ai_max_words", Number(e.target.value))}
+                disabled={!isAdmin}
+              />
+            </div>
+          </div>
+          <div className="space-y-3 rounded-xl border bg-card p-5">
+            <label className="flex items-center gap-2 text-sm">
+              <Checkbox
+                checked={form.ai_images_enabled}
+                onCheckedChange={(checked) => set("ai_images_enabled", Boolean(checked))}
+              />
+              Allow AI-generated featured images
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <Checkbox
+                checked={form.ai_tools_enabled}
+                onCheckedChange={(checked) => set("ai_tools_enabled", Boolean(checked))}
+              />
+              Allow AI editing tools while writing
+            </label>
+            {!isAdmin ? (
+              <p className="text-xs text-muted-foreground">
+                Only administrators can change the AI provider, model and maximum length.
+              </p>
+            ) : null}
           </div>
         </TabsContent>
       </Tabs>

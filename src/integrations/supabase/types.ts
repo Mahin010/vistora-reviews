@@ -14,6 +14,83 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_generations: {
+        Row: {
+          article_type: string | null
+          created_at: string
+          duration_ms: number | null
+          error_message: string | null
+          id: string
+          input_tokens: number | null
+          language: string | null
+          model: string | null
+          output_tokens: number | null
+          post_id: string | null
+          prompt: string
+          result: Json | null
+          settings: Json
+          status: string
+          target_word_count: number | null
+          title: string | null
+          tone: string | null
+          user_id: string | null
+          user_name: string | null
+          word_count: number | null
+        }
+        Insert: {
+          article_type?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          input_tokens?: number | null
+          language?: string | null
+          model?: string | null
+          output_tokens?: number | null
+          post_id?: string | null
+          prompt: string
+          result?: Json | null
+          settings?: Json
+          status?: string
+          target_word_count?: number | null
+          title?: string | null
+          tone?: string | null
+          user_id?: string | null
+          user_name?: string | null
+          word_count?: number | null
+        }
+        Update: {
+          article_type?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          id?: string
+          input_tokens?: number | null
+          language?: string | null
+          model?: string | null
+          output_tokens?: number | null
+          post_id?: string | null
+          prompt?: string
+          result?: Json | null
+          settings?: Json
+          status?: string
+          target_word_count?: number | null
+          title?: string | null
+          tone?: string | null
+          user_id?: string | null
+          user_name?: string | null
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_generations_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           accent: string | null
@@ -473,6 +550,15 @@ export type Database = {
         Row: {
           admin_email: string | null
           affiliate_disclosure: string | null
+          ai_default_audience: string | null
+          ai_default_language: string | null
+          ai_default_tone: string | null
+          ai_default_word_count: number | null
+          ai_images_enabled: boolean | null
+          ai_max_words: number | null
+          ai_model: string | null
+          ai_provider: string | null
+          ai_tools_enabled: boolean | null
           comments_enabled: boolean
           comments_require_approval: boolean
           contact_email: string | null
@@ -502,6 +588,15 @@ export type Database = {
         Insert: {
           admin_email?: string | null
           affiliate_disclosure?: string | null
+          ai_default_audience?: string | null
+          ai_default_language?: string | null
+          ai_default_tone?: string | null
+          ai_default_word_count?: number | null
+          ai_images_enabled?: boolean | null
+          ai_max_words?: number | null
+          ai_model?: string | null
+          ai_provider?: string | null
+          ai_tools_enabled?: boolean | null
           comments_enabled?: boolean
           comments_require_approval?: boolean
           contact_email?: string | null
@@ -531,6 +626,15 @@ export type Database = {
         Update: {
           admin_email?: string | null
           affiliate_disclosure?: string | null
+          ai_default_audience?: string | null
+          ai_default_language?: string | null
+          ai_default_tone?: string | null
+          ai_default_word_count?: number | null
+          ai_images_enabled?: boolean | null
+          ai_max_words?: number | null
+          ai_model?: string | null
+          ai_provider?: string | null
+          ai_tools_enabled?: boolean | null
           comments_enabled?: boolean
           comments_require_approval?: boolean
           contact_email?: string | null
