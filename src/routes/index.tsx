@@ -21,20 +21,21 @@ import { NewsletterForm } from "@/components/newsletter-form";
 import { PostCard } from "@/components/post-card";
 import { Rating } from "@/components/rating";
 import { SiteShell } from "@/components/site-shell";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getHomeData } from "@/lib/content.functions";
 import { SITE_DESCRIPTION, SITE_NAME, formatDate } from "@/lib/site";
 import type { PostCardData } from "@/lib/types";
 
-const CATEGORY_DETAILS: Record<string, { icon: LucideIcon; description: string }> = {
-  software: { icon: Layers3, description: "Business software and essential SaaS platforms." },
-  "ai-tools": { icon: Bot, description: "AI assistants and intelligent work tools." },
-  "marketing-tools": { icon: Megaphone, description: "Tools for growth, email, content and SEO." },
-  productivity: { icon: Zap, description: "Apps that help teams do their best work." },
-  wordpress: { icon: Code2, description: "Hosting, plugins and tools for WordPress." },
-  comparisons: { icon: Scale, description: "Clear, side-by-side product comparisons." },
-  "how-to-guides": { icon: Wrench, description: "Practical guidance for getting more from your tools." },
+type CategoryPath = "/software" | "/ai-tools" | "/marketing-tools" | "/productivity" | "/wordpress" | "/comparisons" | "/how-to-guides";
+
+const CATEGORY_DETAILS: Record<string, { icon: LucideIcon; description: string; to: CategoryPath }> = {
+  software: { icon: Layers3, description: "Business software and essential SaaS platforms.", to: "/software" },
+  "ai-tools": { icon: Bot, description: "AI assistants and intelligent work tools.", to: "/ai-tools" },
+  "marketing-tools": { icon: Megaphone, description: "Tools for growth, email, content and SEO.", to: "/marketing-tools" },
+  productivity: { icon: Zap, description: "Apps that help teams do their best work.", to: "/productivity" },
+  wordpress: { icon: Code2, description: "Hosting, plugins and tools for WordPress.", to: "/wordpress" },
+  comparisons: { icon: Scale, description: "Clear, side-by-side product comparisons.", to: "/comparisons" },
+  "how-to-guides": { icon: Wrench, description: "Practical guidance for getting more from your tools.", to: "/how-to-guides" },
 };
 
 export const Route = createFileRoute("/")({
@@ -224,7 +225,7 @@ function Home() {
               return (
                 <Link
                   key={category.id}
-                  to={`/${category.slug}` as "/software"}
+                  to={detail.to}
                   className="group flex min-h-44 flex-col rounded-lg border bg-card p-5 shadow-card transition-[border-color,box-shadow] hover:border-primary/30 hover:shadow-lift"
                 >
                   <div className="flex items-start justify-between">
@@ -276,10 +277,13 @@ function Home() {
                     <Link to="/reviews/$slug" params={{ slug: post.slug }} className="text-sm font-semibold leading-snug hover:text-primary">
                       {post.title}
                     </Link>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {post.view_count > 0 ? `${post.view_count.toLocaleString()} reads` : "Reader favorite"}
-                      {post.category ? ` · ${post.category.name}` : ""}
-                    </p>
+                    {post.view_count > 0 || post.category ? (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {post.view_count > 0 ? `${post.view_count.toLocaleString()} reads` : ""}
+                        {post.view_count > 0 && post.category ? " · " : ""}
+                        {post.category?.name ?? ""}
+                      </p>
+                    ) : null}
                   </div>
                 </li>
               ))}
