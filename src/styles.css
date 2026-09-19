@@ -7,7 +7,7 @@
 /*
  * Vistora Reviews design system.
  * Editorial tech-publication look: warm paper background, deep ink text,
- * a single teal accent and amber reserved for ratings.
+  * a single turquoise accent and amber reserved for ratings.
  */
 
 @theme inline {
@@ -161,7 +161,7 @@
   h4 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.015em;
+    letter-spacing: 0;
   }
 }
 

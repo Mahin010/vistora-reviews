@@ -17,11 +17,14 @@ import { NAV_LINKS, SITE_NAME } from "@/lib/site";
 
 function Wordmark() {
   return (
-    <Link to="/" className="flex items-center gap-2">
+    <Link to="/" className="flex items-center gap-2.5">
       <span className="grid h-8 w-8 place-items-center rounded-md bg-primary font-display text-base font-semibold text-primary-foreground">
         V
       </span>
-      <span className="font-display text-lg font-semibold tracking-tight">{SITE_NAME}</span>
+      <span className="flex flex-col leading-none">
+        <span className="font-mono text-[0.55rem] font-medium uppercase tracking-[0.18em] text-muted-foreground">Vistora</span>
+        <span className="mt-1 font-display text-base font-semibold">Reviews</span>
+      </span>
     </Link>
   );
 }
@@ -39,16 +42,16 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/85 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
         <Wordmark />
 
-        <nav className="hidden items-center gap-5 lg:flex" aria-label="Main">
+        <nav className="hidden items-center gap-4 lg:flex" aria-label="Main">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.to}
               to={link.to}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
               activeProps={{ className: "text-foreground font-medium" }}
             >
               {link.label}
@@ -66,6 +69,9 @@ export function SiteHeader() {
             <Search className="h-4 w-4" />
           </Button>
           <ThemeToggle />
+          <Button asChild size="sm" className="hidden xl:inline-flex">
+            <Link to="/reviews">Browse reviews</Link>
+          </Button>
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu">
