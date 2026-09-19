@@ -5,6 +5,7 @@ export type Category = {
   description: string | null;
   accent: string | null;
   sort_order: number;
+  post_count?: number;
 };
 
 export type Tag = {

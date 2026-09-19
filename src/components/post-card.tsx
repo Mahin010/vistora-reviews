@@ -21,7 +21,7 @@ export function PostCard({
   return (
     <article
       className={cn(
-        "group flex overflow-hidden rounded-xl border bg-card shadow-card transition-shadow hover:shadow-lift",
+        "group flex overflow-hidden rounded-lg border bg-card shadow-card transition-[border-color,box-shadow] hover:border-primary/25 hover:shadow-lift",
         horizontal ? "flex-col sm:flex-row" : "flex-col",
         className,
       )}
@@ -46,7 +46,7 @@ export function PostCard({
         )}
       </Link>
 
-      <div className="flex flex-1 flex-col gap-3 p-5">
+      <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
         <div className="flex items-center gap-2">
           {post.category ? (
             <Badge variant="secondary" className="font-mono text-[0.65rem] uppercase tracking-wider">
@@ -67,7 +67,7 @@ export function PostCard({
         </h3>
 
         {post.excerpt ? (
-          <p className="line-clamp-3 text-sm text-muted-foreground">{post.excerpt}</p>
+          <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">{post.excerpt}</p>
         ) : null}
 
         <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-2 text-xs text-muted-foreground">

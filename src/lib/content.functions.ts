@@ -37,7 +37,7 @@ function publishedQuery(db: SupabaseClient) {
 export const getHomeData = createServerFn({ method: "GET" }).handler(async () => {
   const db = publicClient();
 
-  const [featured, latestReviews, popular, latestArticles, comparisons, categories] =
+  const [featured, latestReviews, popular, latestArticles, comparisons, categories, categoryPosts] =
     await Promise.all([
       publishedQuery(db)
         .eq("is_featured", true)
@@ -48,13 +48,29 @@ export const getHomeData = createServerFn({ method: "GET" }).handler(async () =>
         .order("published_at", { ascending: false })
         .limit(6),
       publishedQuery(db).order("view_count", { ascending: false }).limit(5),
-      publishedQuery(db).order("published_at", { ascending: false }).limit(6),
+      publishedQuery(db)
+        .in("post_type", ["guide", "article"])
+        .order("published_at", { ascending: false })
+        .limit(6),
       publishedQuery(db)
         .eq("post_type", "comparison")
         .order("published_at", { ascending: false })
         .limit(3),
       db.from("categories").select("*").order("sort_order"),
+      db
+        .from("posts")
+        .select("category_id")
+        .in("status", ["published", "scheduled"])
+        .lte("published_at", new Date().toISOString())
+        .is("trashed_at", null),
     ]);
+
+  const categoryCounts = new Map<string, number>();
+  for (const post of categoryPosts.data ?? []) {
+    if (post.category_id) {
+      categoryCounts.set(post.category_id, (categoryCounts.get(post.category_id) ?? 0) + 1);
+    }
+  }
 
   return {
     featured: (featured.data?.[0] ?? null) as PostCardData | null,
@@ -62,7 +78,10 @@ export const getHomeData = createServerFn({ method: "GET" }).handler(async () =>
     popular: (popular.data ?? []) as unknown as PostCardData[],
     latestArticles: (latestArticles.data ?? []) as unknown as PostCardData[],
     comparisons: (comparisons.data ?? []) as unknown as PostCardData[],
-    categories: (categories.data ?? []) as Category[],
+    categories: ((categories.data ?? []) as Category[]).map((category) => ({
+      ...category,
+      post_count: categoryCounts.get(category.id) ?? 0,
+    })),
   };
 });
 
