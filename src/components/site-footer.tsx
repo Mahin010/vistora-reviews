@@ -5,7 +5,7 @@ import { FOOTER_LINKS, NAV_LINKS, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-20 border-t bg-surface">
+    <footer className="border-t bg-background">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2">
@@ -17,7 +17,7 @@ export function SiteFooter() {
           <p className="mt-3 max-w-sm text-sm text-muted-foreground">{SITE_TAGLINE}</p>
           <div className="mt-5 max-w-sm">
             <p className="eyebrow mb-2">The weekly issue</p>
-            <NewsletterForm />
+            <NewsletterForm compact />
           </div>
         </div>
 
@@ -56,7 +56,7 @@ export function SiteFooter() {
       <div className="border-t">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {SITE_NAME}. All reviews are written after hands-on testing.
+            © 2026 {SITE_NAME}. All rights reserved.
           </p>
           <p>Independent · Reader-supported · Never paid for coverage</p>
         </div>
