@@ -47,6 +47,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: `${SITE_NAME} — Independent Software Reviews & Comparisons` },
       { property: "og:description", content: SITE_DESCRIPTION },
       { property: "og:type", content: "website" },
+      { name: "impact-site-verification", content: "9599db3b-f99f-49d1-a727-23c7d07ea71c" },
       { property: "og:url", content: "/" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
